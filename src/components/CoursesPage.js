@@ -1,44 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { getCourses } from "../api/courseApi";
+import { CourseList } from "../components/CourseList";
 
-class CoursesPage extends React.Component {
+function CoursesPage() {
 
-    state = {
-        courses: []
-    };
+    const [courses, setCourses] = useState([]);
 
-    async componentDidMount() {
+    useEffect(() => {
 
-        const courses = await getCourses();
-        this.setState({ courses: courses });
-    }
+        const fetchData = async () => {
 
-    render() {
+            const _courses = await getCourses();
+            setCourses(_courses);
+        };
 
-        return (
-            <>
-                <h2>Courses</h2>
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th>Title</th>
-                            <th>Author ID</th>
-                            <th>Category</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.courses.map(course =>
-                            <tr key={course.id}>
-                                <td>{course.title}</td>
-                                <td>{course.authorId}</td>
-                                <td>{course.category}</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
-            </>
-        );
-    }
+        fetchData();
+    }, []);
+
+    return (
+        <>
+            <h2>Courses</h2>
+            <CourseList courses={courses} />
+        </>
+    );
 }
 
 export default CoursesPage;
